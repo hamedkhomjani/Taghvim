@@ -3,41 +3,59 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCountdown } from '@/hooks/useCountdown';
 import { toPersianDigits } from '@/utils/date';
-import { cn } from '@/utils/cn';
 
-const TimeUnit = ({ value, label }: { value: number; label: string }) => {
+const TimeUnit = ({ value, label, index }: { value: number; label: string; index: number }) => {
     return (
-        <div className="flex flex-col items-center mx-2 md:mx-4">
-            <div className="relative overflow-hidden bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl shadow-xl w-20 h-24 md:w-32 md:h-40 flex items-center justify-center">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
+            className="flex flex-col items-center mx-2 md:mx-6"
+        >
+            <div className="relative overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 rounded-[1.2rem] md:rounded-[2.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.2)] w-16 h-20 md:w-36 md:h-48 flex items-center justify-center group hover:bg-white/10 transition-colors duration-500">
                 <AnimatePresence mode="popLayout">
                     <motion.div
                         key={value}
-                        initial={{ y: 50, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        exit={{ y: -50, opacity: 0 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                        className="absolute text-4xl md:text-7xl font-bold text-white drop-shadow-md"
+                        initial={{ y: 40, opacity: 0, filter: 'blur(10px)' }}
+                        animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+                        exit={{ y: -40, opacity: 0, filter: 'blur(10px)' }}
+                        transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+                        className="absolute text-3xl md:text-8xl font-black text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.3)] tracking-tighter"
                     >
                         {toPersianDigits(value.toString().padStart(2, '0'))}
                     </motion.div>
                 </AnimatePresence>
+
+                {/* Decorative inner glow */}
+                <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
             </div>
-            <span className="mt-2 md:mt-4 text-sm md:text-xl font-medium text-white/90 drop-shadow-sm">
+            <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1 + index * 0.1 }}
+                className="mt-4 md:mt-6 text-xs md:text-lg font-bold text-white/70 uppercase tracking-[0.2em] drop-shadow-sm"
+            >
                 {label}
-            </span>
-        </div>
+            </motion.span>
+        </motion.div>
     );
 };
 
 export const CountdownTimer = () => {
     const { days, hours, minutes, seconds } = useCountdown();
 
+    const units = [
+        { value: days, label: "روز" },
+        { value: hours, label: "ساعت" },
+        { value: minutes, label: "دقیقه" },
+        { value: seconds, label: "ثانیه" }
+    ];
+
     return (
-        <div className="flex flex-wrap justify-center items-center p-4 md:p-8 rounded-3xl" dir="rtl">
-            <TimeUnit value={seconds} label="ثانیه" />
-            <TimeUnit value={minutes} label="دقیقه" />
-            <TimeUnit value={hours} label="ساعت" />
-            <TimeUnit value={days} label="روز" />
+        <div className="flex flex-nowrap justify-center items-center gap-2 md:gap-8" dir="ltr">
+            {units.map((unit, i) => (
+                <TimeUnit key={unit.label} value={unit.value} label={unit.label} index={i} />
+            ))}
         </div>
     );
 };

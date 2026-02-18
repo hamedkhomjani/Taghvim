@@ -7,8 +7,10 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <Hero />
-      <div className="container mx-auto px-4 -mt-20 relative z-20 mb-12">
-        <ShareButtons />
+      <div className="container mx-auto px-4 -mt-10 relative z-20 mb-20">
+        <div className="bg-white/5 dark:bg-gray-900/50 backdrop-blur-xl border border-gray-200/20 dark:border-white/10 rounded-3xl p-4 shadow-xl max-w-md mx-auto">
+          <ShareButtons />
+        </div>
       </div>
       <InfoSection />
       <Footer />

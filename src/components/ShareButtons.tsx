@@ -1,7 +1,7 @@
 'use client';
 
 import { Twitter, Share2, Link as LinkIcon } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 
 const TelegramIcon = ({ className }: { className?: string }) => (
@@ -38,56 +38,61 @@ export const ShareButtons = () => {
     };
 
     return (
-        <div className="flex justify-center gap-4 py-8">
-            <motion.a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="p-3 bg-black text-white rounded-full shadow-lg hover:shadow-xl transition-shadow"
-                aria-label="Share on Twitter"
-            >
-                <Twitter className="w-6 h-6" />
-            </motion.a>
-
-            <motion.a
-                href={`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="p-3 bg-blue-500 text-white rounded-full shadow-lg hover:shadow-xl transition-shadow"
-                aria-label="Share on Telegram"
-            >
-                <TelegramIcon className="w-6 h-6" />
-            </motion.a>
-
-            <motion.a
-                href={`https://wa.me/?text=${encodeURIComponent(text)}%20${encodeURIComponent(url)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="p-3 bg-green-500 text-white rounded-full shadow-lg hover:shadow-xl transition-shadow"
-                aria-label="Share on WhatsApp"
-            >
-                <WhatsAppIcon className="w-6 h-6" />
-            </motion.a>
+        <div className="flex justify-center items-center gap-6 py-2">
+            {[
+                {
+                    href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+                    icon: <Twitter className="w-5 h-5" />,
+                    bg: "bg-[#1DA1F2]",
+                    label: "Twitter"
+                },
+                {
+                    href: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
+                    icon: <TelegramIcon className="w-5 h-5" />,
+                    bg: "bg-[#0088cc]",
+                    label: "Telegram"
+                },
+                {
+                    href: `https://wa.me/?text=${encodeURIComponent(text)}%20${encodeURIComponent(url)}`,
+                    icon: <WhatsAppIcon className="w-5 h-5" />,
+                    bg: "bg-[#25D366]",
+                    label: "WhatsApp"
+                }
+            ].map((btn, i) => (
+                <motion.a
+                    key={i}
+                    href={btn.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.15, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`p-3.5 ${btn.bg} text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center`}
+                    aria-label={`Share on ${btn.label}`}
+                >
+                    {btn.icon}
+                </motion.a>
+            ))}
 
             <motion.button
                 onClick={handleCopy}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="p-3 bg-gray-700 text-white rounded-full shadow-lg hover:shadow-xl transition-shadow relative"
+                whileHover={{ scale: 1.15, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="p-3.5 bg-gray-800 dark:bg-gray-100 text-white dark:text-gray-900 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 relative group flex items-center justify-center"
                 aria-label="Copy Link"
             >
-                <LinkIcon className="w-6 h-6" />
-                {copied && (
-                    <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded opacity-90 whitespace-nowrap">
-                        کپی شد!
-                    </span>
-                )}
+                <LinkIcon className="w-5 h-5" />
+                <AnimatePresence>
+                    {copied && (
+                        <motion.span
+                            initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                            animate={{ opacity: 1, y: -45, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            className="absolute bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold py-1.5 px-3 rounded-lg shadow-xl whitespace-nowrap"
+                        >
+                            کپی شد!
+                        </motion.span>
+                    )}
+                </AnimatePresence>
             </motion.button>
         </div>
     );
