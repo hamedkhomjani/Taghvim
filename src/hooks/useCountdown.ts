@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { getActiveNowruz, type NowruzYear } from '@/utils/nowruzDates';
+import { NOWRUZ_YEARS, getActiveNowruz, type NowruzYear } from '@/utils/nowruzDates';
 
 export interface CountdownState {
   days: number;
@@ -14,13 +14,16 @@ export const useCountdown = (): CountdownState => {
   const [activeYear, setActiveYear] = useState<NowruzYear>(getActiveNowruz);
   const lastYearRef = useRef(activeYear.persianYear);
 
-  const [timeLeft, setTimeLeft] = useState<CountdownState>({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-    isFinished: false,
-    activeYear,
+  const [timeLeft, setTimeLeft] = useState<CountdownState>(() => {
+    const current = getActiveNowruz();
+    return {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+      isFinished: false,
+      activeYear: current,
+    };
   });
 
   const calculateTimeLeft = useCallback(() => {
@@ -28,11 +31,16 @@ export const useCountdown = (): CountdownState => {
     const current = getActiveNowruz();
     const difference = current.date.getTime() - now.getTime();
 
-    // Determine if we just finished the PREVIOUS target year
+    // Find the most recent Nowruz that happened (within last 24 hours)
+    const justPassedNowruz = NOWRUZ_YEARS.find(n => {
+        const diff = now.getTime() - n.date.getTime();
+        return diff >= 0 && diff < 24 * 60 * 60 * 1000; // 24 hours window
+    });
+
     const transitioned = current.persianYear > lastYearRef.current;
     
-    // We are finished if we just transitioned OR we are at/past the target date for the first time
-    const isFinishedNow = transitioned || difference <= 0;
+    // We signal "finished" if we just transitioned, OR if there's a Nowruz that just passed
+    const isFinishedNow = transitioned || !!justPassedNowruz;
 
     if (transitioned) {
       lastYearRef.current = current.persianYear;

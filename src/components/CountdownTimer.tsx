@@ -51,12 +51,15 @@ export const CountdownTimer = () => {
     useEffect(() => {
         // When a year ends (isFinished is true)
         if (isFinished && lastFinishedYear !== activeYear.persianYear) {
-            // If the year has already flipped to the next (e.g. 1406), 
-            // the year that JUST finished is activeYear - 1 (1405).
-            // But if we are exactly at 0, it might still be 1405.
-            const finishedYear = (days === 0 && hours === 0 && minutes === 0 && seconds === 0) 
-                                ? activeYear.persianYear 
-                                : activeYear.persianYear - 1;
+            // Find if there's a year that JUST passed (within last 24h)
+            const now = new Date();
+            const { NOWRUZ_YEARS } = require('@/utils/nowruzDates');
+            const justPassed = NOWRUZ_YEARS.find((n: any) => {
+                const d = now.getTime() - n.date.getTime();
+                return d >= 0 && d < 24 * 60 * 60 * 1000;
+            });
+
+            const finishedYear = justPassed ? justPassed.persianYear : activeYear.persianYear - 1;
             
             setCelebratedYear(finishedYear);
             
