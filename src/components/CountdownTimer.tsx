@@ -1,8 +1,10 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCountdown } from '@/hooks/useCountdown';
 import { toPersianDigits } from '@/utils/date';
+import { NowruzPopup } from './NowruzPopup';
 
 const TimeUnit = ({ value, label, index }: { value: number; label: string; index: number }) => {
     return (
@@ -42,7 +44,22 @@ const TimeUnit = ({ value, label, index }: { value: number; label: string; index
 };
 
 export const CountdownTimer = () => {
-    const { days, hours, minutes, seconds } = useCountdown();
+    const { days, hours, minutes, seconds, isFinished } = useCountdown();
+    const [showPopup, setShowPopup] = useState(false);
+    const [popupDismissed, setPopupDismissed] = useState(false);
+
+    useEffect(() => {
+        if (isFinished && !popupDismissed) {
+            // Small delay so the zero state renders first
+            const timeout = setTimeout(() => setShowPopup(true), 800);
+            return () => clearTimeout(timeout);
+        }
+    }, [isFinished, popupDismissed]);
+
+    const handleClose = () => {
+        setShowPopup(false);
+        setPopupDismissed(true);
+    };
 
     const units = [
         { value: days, label: "روز" },
@@ -52,10 +69,13 @@ export const CountdownTimer = () => {
     ];
 
     return (
-        <div className="flex flex-nowrap justify-center items-center gap-2 md:gap-8" dir="ltr">
-            {units.map((unit, i) => (
-                <TimeUnit key={unit.label} value={unit.value} label={unit.label} index={i} />
-            ))}
-        </div>
+        <>
+            <div className="flex flex-nowrap justify-center items-center gap-2 md:gap-8" dir="ltr">
+                {units.map((unit, i) => (
+                    <TimeUnit key={unit.label} value={unit.value} label={unit.label} index={i} />
+                ))}
+            </div>
+            <NowruzPopup isVisible={showPopup} onClose={handleClose} />
+        </>
     );
 };
