@@ -136,6 +136,36 @@ export const NowruzPopup = ({ isVisible, onClose, persianYear }: NowruzPopupProp
               }}
             />
 
+            {/* X Close Button */}
+            <motion.button
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, type: 'spring', stiffness: 200 }}
+              whileHover={{ scale: 1.15, background: 'rgba(255,255,255,0.2)' }}
+              whileTap={{ scale: 0.9 }}
+              onClick={onClose}
+              aria-label="بستن"
+              style={{
+                position: 'absolute',
+                top: '1rem',
+                right: '1rem',
+                width: '2.2rem',
+                height: '2.2rem',
+                borderRadius: '50%',
+                border: '1px solid rgba(255,255,255,0.2)',
+                background: 'rgba(255,255,255,0.08)',
+                color: 'rgba(255,255,255,0.7)',
+                fontSize: '1.1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                lineHeight: 1,
+              }}
+            >
+              ✕
+            </motion.button>
+
             {/* Emoji */}
             <motion.div
               initial={{ scale: 0, rotate: -30 }}
