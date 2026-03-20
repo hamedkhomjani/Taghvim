@@ -98,8 +98,8 @@ export const Hero = () => {
                     جشن باستانی ایرانیان
                 </motion.div>
 
-                <h1 className="text-5xl md:text-8xl lg:text-9xl font-black text-white mb-6 drop-shadow-[0_10px_10px_rgba(0,0,0,0.2)] leading-[1.1] tracking-tight">
-                    سال نو مبارک
+                <h1 className="text-4xl md:text-7xl lg:text-8xl font-black text-white mb-6 drop-shadow-[0_10px_10px_rgba(0,0,0,0.2)] leading-[1.1] tracking-tight">
+                    تا لحظه تحویل سال
                 </h1>
 
                 <p className="text-xl md:text-3xl text-white/90 mb-12 font-light drop-shadow-md max-w-3xl mx-auto leading-relaxed">
