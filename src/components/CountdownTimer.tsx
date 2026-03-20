@@ -44,11 +44,13 @@ const TimeUnit = ({ value, label, index }: { value: number; label: string; index
 export const CountdownTimer = () => {
     const { days, hours, minutes, seconds, isFinished, activeYear } = useNowruz();
     const [showPopup, setShowPopup] = useState(false);
+    const [celebratedYear, setCelebratedYear] = useState<number>(activeYear.persianYear);
     const [lastFinishedYear, setLastFinishedYear] = useState<number | null>(null);
 
     useEffect(() => {
         // Show popup when finished, but only once per year
         if (isFinished && lastFinishedYear !== activeYear.persianYear) {
+            setCelebratedYear(activeYear.persianYear);
             const timeout = setTimeout(() => {
                 setShowPopup(true);
                 setLastFinishedYear(activeYear.persianYear);
@@ -76,7 +78,7 @@ export const CountdownTimer = () => {
             <NowruzPopup
                 isVisible={showPopup}
                 onClose={handleClose}
-                persianYear={activeYear.persianYear}
+                persianYear={celebratedYear}
             />
         </>
     );
