@@ -33,9 +33,10 @@ const createParticles = (count: number): Particle[] =>
 interface NowruzPopupProps {
   isVisible: boolean;
   onClose: () => void;
+  persianYear: number;
 }
 
-export const NowruzPopup = ({ isVisible, onClose }: NowruzPopupProps) => {
+export const NowruzPopup = ({ isVisible, onClose, persianYear }: NowruzPopupProps) => {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [tick, setTick] = useState(0);
 
@@ -161,7 +162,7 @@ export const NowruzPopup = ({ isVisible, onClose }: NowruzPopupProps) => {
                 lineHeight: 1.3,
               }}
             >
-              سال ۱۴۰۵ مبارک باد! 🎉
+              سال {persianYear.toLocaleString('fa-IR')} مبارک باد! 🎉
             </motion.h2>
 
             {/* Subtitle */}
@@ -177,7 +178,7 @@ export const NowruzPopup = ({ isVisible, onClose }: NowruzPopupProps) => {
                 marginBottom: '0.5rem',
               }}
             >
-              نوروز ۱۴۰۵ فرا رسید!
+              نوروز {persianYear.toLocaleString('fa-IR')} فرا رسید!
             </motion.p>
 
             <motion.p

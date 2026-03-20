@@ -5,11 +5,10 @@ import { CountdownTimer } from './CountdownTimer';
 import { ThemeToggle } from './ThemeToggle';
 import { formatPersianDate, formatGregorianDate, toPersianDigits } from '@/utils/date';
 import { useEffect, useState, useRef } from 'react';
-
-// Hardcoded Nowruz date for 2026 (1405 SH)
-const NOWRUZ_DATE = new Date('2026-03-20T14:46:00Z');
+import { useNowruz } from '@/context/NowruzContext';
 
 export const Hero = () => {
+    const { activeYear } = useNowruz();
     const [currentDate, setCurrentDate] = useState<Date | null>(null);
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({
@@ -72,7 +71,7 @@ export const Hero = () => {
                         <span className="text-white text-xl">⏳</span>
                     </div>
                     <span className="text-white font-bold text-xl tracking-tight drop-shadow-md">
-                        نوروز ۱۴۰۵
+                        نوروز {activeYear.persianYear.toLocaleString('fa-IR')}
                     </span>
                 </motion.div>
                 <motion.div
@@ -104,7 +103,7 @@ export const Hero = () => {
                 </h1>
 
                 <p className="text-xl md:text-3xl text-white/90 mb-12 font-light drop-shadow-md max-w-3xl mx-auto leading-relaxed">
-                    با عشق و امید، به استقبال بهار و آغاز سال <span className="font-bold text-amber-300">۱۴۰۵</span> خورشیدی می‌رویم
+                    با عشق و امید، به استقبال بهار و آغاز سال <span className="font-bold text-amber-300">{activeYear.persianYear.toLocaleString('fa-IR')}</span> خورشیدی می‌رویم
                 </p>
 
                 <div className="w-full max-w-4xl px-4">
@@ -120,8 +119,8 @@ export const Hero = () => {
 
                 <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl mx-auto px-4">
                     {[
-                        { label: "لحظه تحویل سال (ایران):", value: `${toPersianDigits(formatPersianDate(NOWRUZ_DATE))} ساعت ${toPersianDigits('18:16')}` },
-                        { label: "تاریخ میلادی:", value: formatGregorianDate(NOWRUZ_DATE), ltr: true }
+                        { label: "لحظه تحویل سال (ایران):", value: `${toPersianDigits(formatPersianDate(activeYear.date))} ساعت ${toPersianDigits(activeYear.tehranTime)}` },
+                        { label: "تاریخ میلادی:", value: formatGregorianDate(activeYear.date), ltr: true }
                     ].map((item, i) => (
                         <motion.div
                             key={i}

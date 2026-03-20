@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useCountdown } from '@/hooks/useCountdown';
+import { useNowruz } from '@/context/NowruzContext';
 import { toPersianDigits } from '@/utils/date';
 import { NowruzPopup } from './NowruzPopup';
 
@@ -27,8 +27,6 @@ const TimeUnit = ({ value, label, index }: { value: number; label: string; index
                         {toPersianDigits(value.toString().padStart(2, '0'))}
                     </motion.div>
                 </AnimatePresence>
-
-                {/* Decorative inner glow */}
                 <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
             </div>
             <motion.span
@@ -44,22 +42,22 @@ const TimeUnit = ({ value, label, index }: { value: number; label: string; index
 };
 
 export const CountdownTimer = () => {
-    const { days, hours, minutes, seconds, isFinished } = useCountdown();
+    const { days, hours, minutes, seconds, isFinished, activeYear } = useNowruz();
     const [showPopup, setShowPopup] = useState(false);
-    const [popupDismissed, setPopupDismissed] = useState(false);
+    const [lastFinishedYear, setLastFinishedYear] = useState<number | null>(null);
 
     useEffect(() => {
-        if (isFinished && !popupDismissed) {
-            // Small delay so the zero state renders first
-            const timeout = setTimeout(() => setShowPopup(true), 800);
+        // Show popup when finished, but only once per year
+        if (isFinished && lastFinishedYear !== activeYear.persianYear) {
+            const timeout = setTimeout(() => {
+                setShowPopup(true);
+                setLastFinishedYear(activeYear.persianYear);
+            }, 800);
             return () => clearTimeout(timeout);
         }
-    }, [isFinished, popupDismissed]);
+    }, [isFinished, activeYear.persianYear, lastFinishedYear]);
 
-    const handleClose = () => {
-        setShowPopup(false);
-        setPopupDismissed(true);
-    };
+    const handleClose = () => setShowPopup(false);
 
     const units = [
         { value: days, label: "روز" },
@@ -75,7 +73,11 @@ export const CountdownTimer = () => {
                     <TimeUnit key={unit.label} value={unit.value} label={unit.label} index={i} />
                 ))}
             </div>
-            <NowruzPopup isVisible={showPopup} onClose={handleClose} />
+            <NowruzPopup
+                isVisible={showPopup}
+                onClose={handleClose}
+                persianYear={activeYear.persianYear}
+            />
         </>
     );
 };

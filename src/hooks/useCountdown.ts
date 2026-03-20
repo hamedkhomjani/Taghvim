@@ -1,21 +1,38 @@
 import { useState, useEffect } from 'react';
+import { getActiveNowruz, type NowruzYear } from '@/utils/nowruzDates';
 
-// Target date: March 20, 2026 14:46:00 UTC (18:16 Tehran Time)
-const NOWRUZ_DATE = new Date('2026-03-20T14:46:00Z');
+export interface CountdownState {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  isFinished: boolean;
+  activeYear: NowruzYear;
+}
 
-export const useCountdown = () => {
-  const [timeLeft, setTimeLeft] = useState({
+export const useCountdown = (): CountdownState => {
+  const [activeYear, setActiveYear] = useState<NowruzYear>(getActiveNowruz);
+
+  const [timeLeft, setTimeLeft] = useState<CountdownState>({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
     isFinished: false,
+    activeYear,
   });
 
   useEffect(() => {
     const calculateTimeLeft = () => {
       const now = new Date();
-      const difference = NOWRUZ_DATE.getTime() - now.getTime();
+
+      // Re-evaluate which year is active (in case we crossed a boundary)
+      const current = getActiveNowruz();
+      if (current.persianYear !== activeYear.persianYear) {
+        setActiveYear(current);
+      }
+
+      const difference = current.date.getTime() - now.getTime();
 
       if (difference > 0) {
         setTimeLeft({
@@ -24,17 +41,24 @@ export const useCountdown = () => {
           minutes: Math.floor((difference / 1000 / 60) % 60),
           seconds: Math.floor((difference / 1000) % 60),
           isFinished: false,
+          activeYear: current,
         });
       } else {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isFinished: true });
+        setTimeLeft({
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+          isFinished: true,
+          activeYear: current,
+        });
       }
     };
 
     calculateTimeLeft();
     const timer = setInterval(calculateTimeLeft, 1000);
-
     return () => clearInterval(timer);
-  }, []);
+  }, [activeYear.persianYear]);
 
   return timeLeft;
 };
