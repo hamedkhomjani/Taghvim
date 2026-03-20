@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { getActiveNowruz, type NowruzYear } from '@/utils/nowruzDates';
 
 export interface CountdownState {
@@ -6,7 +6,7 @@ export interface CountdownState {
   hours: number;
   minutes: number;
   seconds: number;
-  isFinished: boolean; // This will trigger the popup
+  isFinished: boolean;
   activeYear: NowruzYear;
 }
 
@@ -23,49 +23,48 @@ export const useCountdown = (): CountdownState => {
     activeYear,
   });
 
+  const calculateTimeLeft = useCallback(() => {
+    const now = new Date();
+    const current = getActiveNowruz();
+    const difference = current.date.getTime() - now.getTime();
+
+    // Determine if we just finished the PREVIOUS target year
+    const transitioned = current.persianYear > lastYearRef.current;
+    
+    // We are finished if we just transitioned OR we are at/past the target date for the first time
+    const isFinishedNow = transitioned || difference <= 0;
+
+    if (transitioned) {
+      lastYearRef.current = current.persianYear;
+      setActiveYear(current);
+    }
+
+    if (difference > 0) {
+      setTimeLeft({
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+        isFinished: isFinishedNow,
+        activeYear: current,
+      });
+    } else {
+      setTimeLeft({
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        isFinished: true,
+        activeYear: current,
+      });
+    }
+  }, [activeYear.persianYear]);
+
   useEffect(() => {
-    const calculateTimeLeft = () => {
-      const now = new Date();
-      const current = getActiveNowruz();
-      
-      const difference = current.date.getTime() - now.getTime();
-
-      // If we just transitioned to a new year (the previous one just finished)
-      // or if the difference is <= 0 for the current target
-      const justFinished = current.persianYear > lastYearRef.current || difference <= 0;
-
-      if (justFinished && current.persianYear > lastYearRef.current) {
-        // Update the ref to the new year so we don't trigger finish again immediately
-        lastYearRef.current = current.persianYear;
-        setActiveYear(current);
-      }
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-          isFinished: justFinished, // Signal to show popup
-          activeYear: current,
-        });
-      } else {
-        // This case handles the exact 0 or if we ran out of dates
-        setTimeLeft({
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-          isFinished: true,
-          activeYear: current,
-        });
-      }
-    };
-
     calculateTimeLeft();
     const timer = setInterval(calculateTimeLeft, 1000);
     return () => clearInterval(timer);
-  }, [activeYear.persianYear]);
+  }, [calculateTimeLeft]);
 
   return timeLeft;
 };
