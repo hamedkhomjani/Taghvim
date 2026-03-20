@@ -71,7 +71,7 @@ export const Hero = () => {
                         <span className="text-white text-xl">⏳</span>
                     </div>
                     <span className="text-white font-bold text-xl tracking-tight drop-shadow-md">
-                        نوروز {activeYear.persianYear.toLocaleString('fa-IR')}
+                        نوروز {toPersianDigits(activeYear.persianYear)}
                     </span>
                 </motion.div>
                 <motion.div
@@ -103,7 +103,7 @@ export const Hero = () => {
                 </h1>
 
                 <p className="text-xl md:text-3xl text-white/90 mb-12 font-light drop-shadow-md max-w-3xl mx-auto leading-relaxed">
-                    با عشق و امید، به استقبال بهار و آغاز سال <span className="font-bold text-amber-300">{activeYear.persianYear.toLocaleString('fa-IR')}</span> خورشیدی می‌رویم
+                    با عشق و امید، به استقبال بهار و آغاز سال <span className="font-bold text-amber-300">{toPersianDigits(activeYear.persianYear)}</span> خورشیدی می‌رویم
                 </p>
 
                 <div className="w-full max-w-4xl px-4">

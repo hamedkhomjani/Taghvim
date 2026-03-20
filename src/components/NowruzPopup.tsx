@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toPersianDigits } from '@/utils/date';
 
 interface Particle {
   id: number;
@@ -192,7 +193,7 @@ export const NowruzPopup = ({ isVisible, onClose, persianYear }: NowruzPopupProp
                 lineHeight: 1.3,
               }}
             >
-              سال {persianYear.toLocaleString('fa-IR')} مبارک باد! 🎉
+              سال {toPersianDigits(persianYear)} مبارک باد! 🎉
             </motion.h2>
 
             {/* Subtitle */}
@@ -208,7 +209,7 @@ export const NowruzPopup = ({ isVisible, onClose, persianYear }: NowruzPopupProp
                 marginBottom: '0.5rem',
               }}
             >
-              نوروز {persianYear.toLocaleString('fa-IR')} فرا رسید!
+              نوروز {toPersianDigits(persianYear)} فرا رسید!
             </motion.p>
 
             <motion.p
