@@ -44,20 +44,29 @@ const TimeUnit = ({ value, label, index }: { value: number; label: string; index
 export const CountdownTimer = () => {
     const { days, hours, minutes, seconds, isFinished, activeYear } = useNowruz();
     const [showPopup, setShowPopup] = useState(false);
+    // Track which year we are actually celebrating in the popup
     const [celebratedYear, setCelebratedYear] = useState<number>(activeYear.persianYear);
     const [lastFinishedYear, setLastFinishedYear] = useState<number | null>(null);
 
     useEffect(() => {
-        // Show popup when finished, but only once per year
+        // When a year ends (isFinished is true)
         if (isFinished && lastFinishedYear !== activeYear.persianYear) {
-            setCelebratedYear(activeYear.persianYear);
+            // If the year has already flipped to the next (e.g. 1406), 
+            // the year that JUST finished is activeYear - 1 (1405).
+            // But if we are exactly at 0, it might still be 1405.
+            const finishedYear = (days === 0 && hours === 0 && minutes === 0 && seconds === 0) 
+                                ? activeYear.persianYear 
+                                : activeYear.persianYear - 1;
+            
+            setCelebratedYear(finishedYear);
+            
             const timeout = setTimeout(() => {
                 setShowPopup(true);
                 setLastFinishedYear(activeYear.persianYear);
             }, 800);
             return () => clearTimeout(timeout);
         }
-    }, [isFinished, activeYear.persianYear, lastFinishedYear]);
+    }, [isFinished, activeYear.persianYear, lastFinishedYear, days, hours, minutes, seconds]);
 
     const handleClose = () => setShowPopup(false);
 

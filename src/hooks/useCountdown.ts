@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getActiveNowruz, type NowruzYear } from '@/utils/nowruzDates';
 
 export interface CountdownState {
@@ -6,12 +6,13 @@ export interface CountdownState {
   hours: number;
   minutes: number;
   seconds: number;
-  isFinished: boolean;
+  isFinished: boolean; // This will trigger the popup
   activeYear: NowruzYear;
 }
 
 export const useCountdown = (): CountdownState => {
   const [activeYear, setActiveYear] = useState<NowruzYear>(getActiveNowruz);
+  const lastYearRef = useRef(activeYear.persianYear);
 
   const [timeLeft, setTimeLeft] = useState<CountdownState>({
     days: 0,
@@ -25,14 +26,19 @@ export const useCountdown = (): CountdownState => {
   useEffect(() => {
     const calculateTimeLeft = () => {
       const now = new Date();
-
-      // Re-evaluate which year is active (in case we crossed a boundary)
       const current = getActiveNowruz();
-      if (current.persianYear !== activeYear.persianYear) {
+      
+      const difference = current.date.getTime() - now.getTime();
+
+      // If we just transitioned to a new year (the previous one just finished)
+      // or if the difference is <= 0 for the current target
+      const justFinished = current.persianYear > lastYearRef.current || difference <= 0;
+
+      if (justFinished && current.persianYear > lastYearRef.current) {
+        // Update the ref to the new year so we don't trigger finish again immediately
+        lastYearRef.current = current.persianYear;
         setActiveYear(current);
       }
-
-      const difference = current.date.getTime() - now.getTime();
 
       if (difference > 0) {
         setTimeLeft({
@@ -40,10 +46,11 @@ export const useCountdown = (): CountdownState => {
           hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
           minutes: Math.floor((difference / 1000 / 60) % 60),
           seconds: Math.floor((difference / 1000) % 60),
-          isFinished: false,
+          isFinished: justFinished, // Signal to show popup
           activeYear: current,
         });
       } else {
+        // This case handles the exact 0 or if we ran out of dates
         setTimeLeft({
           days: 0,
           hours: 0,
