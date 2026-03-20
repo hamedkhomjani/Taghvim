@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Vazirmatn } from "next/font/google";
 import "./globals.css";
+import { NowruzProvider } from "@/context/NowruzContext";
 
 const vazirmatn = Vazirmatn({
   subsets: ["arabic", "latin"],
@@ -69,7 +70,9 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {children}
+        <NowruzProvider>
+          {children}
+        </NowruzProvider>
       </body>
     </html>
   );
