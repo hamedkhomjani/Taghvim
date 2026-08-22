@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Layers } from 'lucide-react';
 import { SITE_URL } from '@/config';
+import { TelegramIcon, WhatsAppIcon } from './icons/SocialIcons';
 
 export const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -31,10 +32,10 @@ export const Footer = () => {
                     <h4 className="text-lg font-bold mb-4">هم‌رسانی</h4>
                     <div className="flex space-x-4 space-x-reverse">
                         <a href={`https://t.me/share/url?url=${shareUrl}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-200 dark:bg-gray-800 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="Telegram">
-                            <Layers className="w-5 h-5" />
+                            <TelegramIcon className="w-5 h-5" />
                         </a>
                         <a href={`https://wa.me/?text=${shareUrl}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-200 dark:bg-gray-800 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="WhatsApp">
-                            <Layers className="w-5 h-5" />
+                            <WhatsAppIcon className="w-5 h-5" />
                         </a>
                     </div>
                 </div>

@@ -23,21 +23,3 @@ export const formatGregorianDate = (date: Date): string => {
     }).format(date);
 };
 
-/**
- * Converts a Gregorian date string (YYYY-MM-DD) to a Persian date object
- */
-export const gregToPersian = (date: Date) => {
-    const parts = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-    }).formatToParts(date);
-    
-    const findPart = (type: string) => parts.find(p => p.type === type)?.value || "";
-    return {
-        year: findPart('year'),
-        month: findPart('month'),
-        day: findPart('day')
-    };
-};
-

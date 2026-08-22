@@ -24,7 +24,6 @@ export const ThemeToggle = () => {
 
     const toggleTheme = () => {
         const newTheme = theme === 'light' ? 'dark' : 'light';
-        console.log('Toggling theme to:', newTheme);
         setTheme(newTheme);
         if (newTheme === 'dark') {
             document.documentElement.classList.add('dark');

@@ -1,6 +1,5 @@
 'use client';
 
-import { Hero } from "@/components/Hero"; // Optional: could use a simpler header
 import { DateConverter } from "@/components/DateConverter";
 import { Footer } from "@/components/Footer";
 import { ThemeToggle } from "@/components/ThemeToggle";

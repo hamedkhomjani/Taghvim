@@ -42,13 +42,14 @@ export const DateConverter = () => {
         const gDate = new Date(g.gy, g.gm - 1, g.gd);
         setResult(`${g.gd} ${GregorianMonths[g.gm - 1]} ${g.gy} (${new Intl.DateTimeFormat('fa-IR', { weekday: 'long' }).format(gDate)})`);
       }
-    } catch (e) {
+    } catch {
       setResult('تاریخ وارد شده معتبر نیست');
     }
   };
 
   useEffect(() => {
     handleConvert();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year, month, day, mode]);
 
   const toggleMode = () => {
