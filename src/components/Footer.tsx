@@ -1,6 +1,7 @@
 'use client';
 
-import { Github, Twitter, Layers } from 'lucide-react';
+import Link from 'next/link';
+import { Layers } from 'lucide-react';
 
 export const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -18,21 +19,20 @@ export const Footer = () => {
                     </p>
                 </div>
                 <div>
-                    <h4 className="text-lg font-bold mb-4">لینک‌های مفید</h4>
+                    <h4 className="text-lg font-bold mb-4">دسترسی سریع</h4>
                     <ul className="space-y-2 text-sm">
-                        <li><a href="#" className="hover:text-indigo-500 transition-colors">درباره ما</a></li>
-                        <li><a href="#" className="hover:text-indigo-500 transition-colors">تماس با ما</a></li>
-                        <li><a href="#" className="hover:text-indigo-500 transition-colors">سیاست حریم خصوصی</a></li>
+                        <li><Link href="/" className="hover:text-indigo-500 transition-colors">صفحه اصلی</Link></li>
+                        <li><Link href="/converter" className="hover:text-indigo-500 transition-colors">مبدل تاریخ</Link></li>
                     </ul>
                 </div>
                 <div className="flex flex-col items-center md:items-start">
-                    <h4 className="text-lg font-bold mb-4">شبکه‌های اجتماعی</h4>
+                    <h4 className="text-lg font-bold mb-4">هم‌رسانی</h4>
                     <div className="flex space-x-4 space-x-reverse">
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-200 dark:bg-gray-800 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="Twitter">
-                            <Twitter className="w-5 h-5" />
+                        <a href="https://t.me/share/url?url=https%3A%2F%2Ftaghvim-countdown.vercel.app" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-200 dark:bg-gray-800 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="Telegram">
+                            <Layers className="w-5 h-5" />
                         </a>
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-200 dark:bg-gray-800 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="Github">
-                            <Github className="w-5 h-5" />
+                        <a href="https://wa.me/?text=https%3A%2F%2Ftaghvim-countdown.vercel.app" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-200 dark:bg-gray-800 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="WhatsApp">
+                            <Layers className="w-5 h-5" />
                         </a>
                     </div>
                 </div>

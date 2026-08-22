@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNowruz } from '@/context/NowruzContext';
 import { toPersianDigits } from '@/utils/date';
+import { NOWRUZ_YEARS } from '@/utils/nowruzDates';
 import { NowruzPopup } from './NowruzPopup';
 
 const TimeUnit = ({ value, label, index }: { value: number; label: string; index: number }) => {
@@ -53,8 +54,7 @@ export const CountdownTimer = () => {
         if (isFinished && lastFinishedYear !== activeYear.persianYear) {
             // Find if there's a year that JUST passed (within last 24h)
             const now = new Date();
-            const { NOWRUZ_YEARS } = require('@/utils/nowruzDates');
-            const justPassed = NOWRUZ_YEARS.find((n: any) => {
+            const justPassed = NOWRUZ_YEARS.find((n) => {
                 const d = now.getTime() - n.date.getTime();
                 return d >= 0 && d < 24 * 60 * 60 * 1000;
             });
@@ -69,7 +69,7 @@ export const CountdownTimer = () => {
             }, 800);
             return () => clearTimeout(timeout);
         }
-    }, [isFinished, activeYear.persianYear, lastFinishedYear, days, hours, minutes, seconds]);
+    }, [isFinished, activeYear.persianYear, lastFinishedYear]);
 
     const handleClose = () => setShowPopup(false);
 

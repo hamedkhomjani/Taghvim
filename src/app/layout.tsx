@@ -12,7 +12,14 @@ const vazirmatn = Vazirmatn({
 export const metadata: Metadata = {
   title: "شمارش معکوس نوروز ۱۴۰۵ | Nowruz Countdown",
   description: "Daghayegh ta tahvil-e saal - Minutes until Persian New Year",
-  metadataBase: new URL('https://taghvim-countdown.vercel.app'), // Placeholder
+  metadataBase: new URL('https://taghvim-countdown.vercel.app'),
+  openGraph: {
+    title: "شمارش معکوس نوروز ۱۴۰۵ | Nowruz Countdown",
+    description: "زمان دقیق تحویل سال و شمارش معکوس نوروز",
+    type: "website",
+    locale: "fa_IR",
+    siteName: "Nowruz Countdown",
+  },
 };
 
 export default function RootLayout({
@@ -33,7 +40,7 @@ export default function RootLayout({
       "name": "Global Celebration",
       "address": "Tehran, Iran"
     },
-    "image": "https://taghvim-countdown.vercel.app/og-image.jpg",
+    "image": "https://taghvim-countdown.vercel.app/opengraph-image",
     "description": "Celebrate the Persian New Year with a precise countdown to the Vernal Equinox.",
     "performer": {
       "@type": "Organization",
