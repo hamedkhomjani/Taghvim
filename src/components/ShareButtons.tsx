@@ -3,6 +3,9 @@
 import { Twitter, Share2, Link as LinkIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
+import { useNowruz } from '@/context/NowruzContext';
+import { toPersianDigits } from '@/utils/date';
+import { SITE_URL } from '@/config';
 
 const TelegramIcon = ({ className }: { className?: string }) => (
     <svg
@@ -28,8 +31,9 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 
 export const ShareButtons = () => {
     const [copied, setCopied] = useState(false);
-    const url = 'https://taghvim-countdown.vercel.app';
-    const text = 'زمان دقیق تحویل سال ۱۴۰۵ و شمارش معکوس نوروز را اینجا ببینید:';
+    const { activeYear } = useNowruz();
+    const url = SITE_URL;
+    const text = `زمان دقیق تحویل سال ${toPersianDigits(activeYear.persianYear)} و شمارش معکوس نوروز را اینجا ببینید:`;
 
     const handleCopy = () => {
         navigator.clipboard.writeText(`${text} ${url}`);

@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Vazirmatn } from "next/font/google";
 import "./globals.css";
 import { NowruzProvider } from "@/context/NowruzContext";
+import { getActiveNowruz } from "@/utils/nowruzDates";
+import { toPersianDigits } from "@/utils/date";
+import { SITE_URL, SITE_NAME } from "@/config";
 
 const vazirmatn = Vazirmatn({
   subsets: ["arabic", "latin"],
@@ -9,16 +12,19 @@ const vazirmatn = Vazirmatn({
   display: "swap",
 });
 
+const activeNowruz = getActiveNowruz();
+const activeYearFa = toPersianDigits(activeNowruz.persianYear);
+
 export const metadata: Metadata = {
-  title: "شمارش معکوس نوروز ۱۴۰۵ | Nowruz Countdown",
+  title: `شمارش معکوس نوروز ${activeYearFa} | Nowruz Countdown`,
   description: "Daghayegh ta tahvil-e saal - Minutes until Persian New Year",
-  metadataBase: new URL('https://taghvim-countdown.vercel.app'),
+  metadataBase: new URL(SITE_URL),
   openGraph: {
-    title: "شمارش معکوس نوروز ۱۴۰۵ | Nowruz Countdown",
+    title: `شمارش معکوس نوروز ${activeYearFa} | Nowruz Countdown`,
     description: "زمان دقیق تحویل سال و شمارش معکوس نوروز",
     type: "website",
     locale: "fa_IR",
-    siteName: "Nowruz Countdown",
+    siteName: SITE_NAME,
   },
 };
 
@@ -30,9 +36,9 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Event",
-    "name": "Nowruz 1405 Countdown",
-    "startDate": "2026-03-20T14:46:00+00:00",
-    "endDate": "2026-03-20T23:59:59+00:00",
+    "name": `Nowruz ${activeNowruz.persianYear} Countdown`,
+    "startDate": activeNowruz.date.toISOString(),
+    "endDate": new Date(activeNowruz.date.getTime() + 24 * 60 * 60 * 1000).toISOString(),
     "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
     "eventStatus": "https://schema.org/EventScheduled",
     "location": {
@@ -40,7 +46,7 @@ export default function RootLayout({
       "name": "Global Celebration",
       "address": "Tehran, Iran"
     },
-    "image": "https://taghvim-countdown.vercel.app/opengraph-image",
+    "image": `${SITE_URL}/opengraph-image`,
     "description": "Celebrate the Persian New Year with a precise countdown to the Vernal Equinox.",
     "performer": {
       "@type": "Organization",

@@ -1,6 +1,8 @@
 import { ImageResponse } from 'next/og';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { getActiveNowruz } from '@/utils/nowruzDates';
+import { toPersianDigits } from '@/utils/date';
 
 export const alt = 'Nowruz Countdown | شمارش معکوس نوروز';
 export const size = {
@@ -12,6 +14,7 @@ export const contentType = 'image/png';
 export default async function OpengraphImage() {
   const bold = readFileSync(join(process.cwd(), 'public/fonts/Vazirmatn-Bold.ttf'));
   const black = readFileSync(join(process.cwd(), 'public/fonts/Vazirmatn-Black.ttf'));
+  const yearFa = toPersianDigits(getActiveNowruz().persianYear);
 
   return new ImageResponse(
     (
@@ -33,7 +36,7 @@ export default async function OpengraphImage() {
           تا لحظه تحویل سال
         </div>
         <div style={{ fontSize: 36, fontWeight: 700, opacity: 0.9 }}>
-          Nowruz Countdown · شمارش معکوس نوروز ۱۴۰۵
+          {`Nowruz Countdown · شمارش معکوس نوروز ${yearFa}`}
         </div>
       </div>
     ),

@@ -2,9 +2,11 @@
 
 import Link from 'next/link';
 import { Layers } from 'lucide-react';
+import { SITE_URL } from '@/config';
 
 export const Footer = () => {
     const currentYear = new Date().getFullYear();
+    const shareUrl = encodeURIComponent(SITE_URL);
 
     return (
         <footer className="bg-gray-100 dark:bg-gray-950 text-gray-800 dark:text-gray-400 py-12 border-t border-gray-200 dark:border-gray-800">
@@ -28,10 +30,10 @@ export const Footer = () => {
                 <div className="flex flex-col items-center md:items-start">
                     <h4 className="text-lg font-bold mb-4">هم‌رسانی</h4>
                     <div className="flex space-x-4 space-x-reverse">
-                        <a href="https://t.me/share/url?url=https%3A%2F%2Ftaghvim-countdown.vercel.app" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-200 dark:bg-gray-800 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="Telegram">
+                        <a href={`https://t.me/share/url?url=${shareUrl}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-200 dark:bg-gray-800 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="Telegram">
                             <Layers className="w-5 h-5" />
                         </a>
-                        <a href="https://wa.me/?text=https%3A%2F%2Ftaghvim-countdown.vercel.app" target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-200 dark:bg-gray-800 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="WhatsApp">
+                        <a href={`https://wa.me/?text=${shareUrl}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-gray-200 dark:bg-gray-800 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="WhatsApp">
                             <Layers className="w-5 h-5" />
                         </a>
                     </div>
