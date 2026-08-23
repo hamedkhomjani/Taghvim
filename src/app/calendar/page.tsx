@@ -9,6 +9,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 export const metadata: Metadata = {
   title: "تقویم شمسی | تقویم ایران",
   description: "تقویم شمسی (هجری خورشیدی) با نمایش تاریخ میلادی هر روز - مشاهده ماه‌های سال شمسی",
+  alternates: { canonical: "/calendar" },
 };
 
 export default function CalendarPage() {

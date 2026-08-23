@@ -11,7 +11,7 @@ import { CalendarDays, Calculator, Cake } from 'lucide-react';
 
 export const Hero = () => {
     const { activeYear } = useNowruz();
-    const [currentDate, setCurrentDate] = useState<Date | null>(null);
+    const [todayLabel, setTodayLabel] = useState<string | null>(null);
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -22,8 +22,9 @@ export const Hero = () => {
     const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
     useEffect(() => {
-        setCurrentDate(new Date());
-        const interval = setInterval(() => setCurrentDate(new Date()), 1000);
+        const update = () => setTodayLabel(toPersianDigits(formatPersianDate(new Date())));
+        update();
+        const interval = setInterval(update, 30000);
         return () => clearInterval(interval);
     }, []);
 
@@ -168,7 +169,7 @@ export const Hero = () => {
                 className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/40 text-sm font-light tracking-widest uppercase flex flex-col items-center gap-4"
             >
                 <div className="w-[1px] h-12 bg-gradient-to-b from-white/40 to-transparent"></div>
-                امروز: {currentDate ? toPersianDigits(formatPersianDate(currentDate)) : '...'}
+                امروز: {todayLabel ?? '...'}
             </motion.div>
         </div>
     );
