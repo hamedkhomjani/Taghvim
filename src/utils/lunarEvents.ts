@@ -27,13 +27,15 @@ export const HIJRI_MONTH_NAMES = [
   'رمضان', 'شوال', 'ذیقعده', 'ذیحجه',
 ];
 
-/** Key: "hijriMonth-hijriDay" */
+/** Key: "hijriMonth-hijriDay", or "LAST-2" for the last day of Safar. */
 export const LUNAR_EVENTS: ReadonlyMap<string, { label: string; isHoliday: boolean }> = new Map([
   ['1-9', { label: 'تاسوعای حسینی', isHoliday: true }],
   ['1-10', { label: 'عاشورای حسینی', isHoliday: true }],
   ['2-20', { label: 'اربعین حسینی', isHoliday: true }],
   ['2-28', { label: 'وفات رسول اکرم (ص) و شهادت امام حسن مجتبی (ع)', isHoliday: true }],
+  ['LAST-2', { label: 'شهادت امام رضا (ع)', isHoliday: true }],
   ['3-8', { label: 'شهادت امام حسن عسکری (ع)', isHoliday: false }],
+  ['3-12', { label: 'میلاد رسول اکرم (ص) به روایت اهل سنت', isHoliday: false }],
   ['3-17', { label: 'میلاد رسول اکرم (ص) و امام جعفر صادق (ع)', isHoliday: true }],
   ['6-3', { label: 'شهادت حضرت فاطمه زهرا (س)', isHoliday: true }],
   ['7-13', { label: 'ولادت امام علی (ع) و روز پدر', isHoliday: true }],
@@ -43,6 +45,7 @@ export const LUNAR_EVENTS: ReadonlyMap<string, { label: string; isHoliday: boole
   ['10-1', { label: 'عید سعید فطر', isHoliday: true }],
   ['10-2', { label: 'تعطیل به مناسبت عید سعید فطر', isHoliday: true }],
   ['11-11', { label: 'ولادت امام رضا (ع)', isHoliday: false }],
+  ['12-9', { label: 'روز عرفه', isHoliday: false }],
   ['12-10', { label: 'عید سعید قربان', isHoliday: true }],
   ['12-18', { label: 'عید سعید غدیر خم', isHoliday: true }],
 ]);

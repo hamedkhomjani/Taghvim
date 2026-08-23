@@ -1,6 +1,7 @@
 import jalaali from 'jalaali-js';
 import { FIXED_HOLIDAYS } from './iranianHolidays';
 import { toHijri, LUNAR_EVENTS, HIJRI_MONTH_NAMES } from './lunarEvents';
+import { ZOROASTRIAN_EVENTS } from './zoroastrianEvents';
 import { toPersianDigits } from './date';
 
 // National/cultural commemorative days with fixed Jalali dates.
@@ -85,6 +86,8 @@ export interface EventItem {
   label: string;
   isHoliday: boolean;
   isInternational?: boolean;
+  isZoroastrian?: boolean;
+  isLunar?: boolean;
   hijriLabel?: string;
 }
 
@@ -118,12 +121,23 @@ export const getMonthEvents = (jy: number, jm: number): DayEvents[] => {
     const international = INTERNATIONAL_DAYS.get(`${g.gm}-${g.gd}`);
     if (international) push(jd, { label: international, isHoliday: false, isInternational: true });
 
-    const h = toHijri(new Date(g.gy, g.gm - 1, g.gd));
-    const lunar = LUNAR_EVENTS.get(`${h.hm}-${h.hd}`);
+    const zoroastrian = ZOROASTRIAN_EVENTS.get(solarKey);
+    if (zoroastrian) push(jd, { label: zoroastrian, isHoliday: false, isZoroastrian: true });
+
+    const date = new Date(g.gy, g.gm - 1, g.gd);
+    const h = toHijri(date);
+    let lunarKey = `${h.hm}-${h.hd}`;
+    // "LAST-m": the event falls on the final day of Hijri month m
+    if (h.hm >= 1 && h.hm <= 12 && !LUNAR_EVENTS.has(lunarKey)) {
+      const hTomorrow = toHijri(new Date(g.gy, g.gm - 1, g.gd + 1));
+      if (hTomorrow.hm !== h.hm) lunarKey = `LAST-${h.hm}`;
+    }
+    const lunar = LUNAR_EVENTS.get(lunarKey);
     if (lunar) {
       push(jd, {
         label: lunar.label,
         isHoliday: lunar.isHoliday,
+        isLunar: true,
         hijriLabel: `${toPersianDigits(h.hd)} ${HIJRI_MONTH_NAMES[h.hm - 1]}`,
       });
     }

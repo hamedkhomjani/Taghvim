@@ -5,8 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import jalaali from 'jalaali-js';
 import { toPersianDigits } from '@/utils/date';
-import { getHolidayName } from '@/utils/iranianHolidays';
-import { getMonthEvents, type DayEvents } from '@/utils/monthEvents';
+import { getMonthEvents, type DayEvents, type EventItem } from '@/utils/monthEvents';
 
 const PERSIAN_MONTHS = [
   'فروردین', 'اردیبهشت', 'خرداد',
@@ -66,6 +65,14 @@ export const JalaliCalendar = () => {
   const events = getMonthEvents(view.jy, view.jm);
   const todayIn = (d: DayEvents) =>
     d.day === todayJalaali.jd && view.jm === todayJalaali.jm && view.jy === todayJalaali.jy;
+
+  const isZoro = (item: EventItem) => !!item.isZoroastrian;
+  const eventsByDay = useMemo(() => {
+    const m = new Map<number, DayEvents>();
+    for (const d of events) m.set(d.day, d);
+    return m;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view]);
 
   return (
     <div className="w-full flex flex-col lg:flex-row gap-5 lg:gap-6 items-stretch lg:items-start justify-center">
@@ -127,26 +134,33 @@ export const JalaliCalendar = () => {
             if (!cell) return <div key={`empty-${i}`} />;
             const friday = i % 7 === FRIDAY_INDEX;
             const today = isToday(cell);
-            const holidayName = getHolidayName(cell.jm, cell.jd);
+            const dayEvents = eventsByDay.get(cell.jd);
+            const hasCivilHoliday = !!dayEvents?.items.some((it) => it.isHoliday);
+            const hasZoroDay = !!dayEvents?.items.some(isZoro);
+            const tooltipLabel = dayEvents ? ` - ${dayEvents.items.map((it) => it.label).join('، ')}` : '';
             return (
               <div
                 key={cell.jd}
-                title={`${cell.jd} ${PERSIAN_MONTHS[cell.jm - 1]} ${cell.jy}${holidayName ? ` - ${holidayName}` : ''}`}
+                title={`${toPersianDigits(cell.jd)} ${PERSIAN_MONTHS[cell.jm - 1]} ${toPersianDigits(cell.jy)}${tooltipLabel}`}
                 className={`h-10 flex flex-col items-center justify-center rounded-lg transition-all ${
                   today
                     ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-500/30 scale-105'
-                    : friday || holidayName
+                    : friday || hasCivilHoliday
                       ? 'bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20'
-                      : 'bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10'
+                      : hasZoroDay
+                        ? 'bg-amber-50 dark:bg-amber-500/10 hover:bg-amber-100 dark:hover:bg-amber-500/20'
+                        : 'bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10'
                 }`}
               >
                 <span
                   className={`text-sm font-bold leading-tight ${
                     today
                       ? 'text-white'
-                      : friday || holidayName
+                      : friday || hasCivilHoliday
                         ? 'text-rose-500 dark:text-rose-400'
-                        : 'text-slate-700 dark:text-slate-200'
+                        : hasZoroDay
+                          ? 'text-amber-600 dark:text-amber-400'
+                          : 'text-slate-700 dark:text-slate-200'
                   }`}
                 >
                   {toPersianDigits(cell.jd)}
@@ -198,6 +212,9 @@ export const JalaliCalendar = () => {
             <span className="flex items-center gap-1 text-sky-600 dark:text-sky-400">
               <span className="w-2 h-2 rounded-full bg-sky-500 inline-block" /> روز جهانی
             </span>
+            <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
+              <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" /> جشن‌های زرتشتی
+            </span>
           </div>
         </div>
         <ul className="p-3 lg:flex-1 lg:overflow-y-auto">
@@ -207,20 +224,23 @@ export const JalaliCalendar = () => {
             </li>
           )}
           {events.map((d) => {
-            const hasHoliday = d.items.some((i) => i.isHoliday);
-            const hasInternational = !hasHoliday && d.items.some((i) => i.isInternational);
+            const hasZoro = d.items.some(isZoro);
+            const hasHoliday = !hasZoro && d.items.some((it) => it.isHoliday);
+            const hasInternational = !hasZoro && !hasHoliday && d.items.some((i) => i.isInternational);
             return (
               <li
                 key={d.day}
-                className={`flex items-start gap-3 px-2 py-1.5 rounded-xl ${todayIn(d) ? 'bg-amber-500/10' : ''}`}
+                className={`flex items-start gap-3 px-2 py-1.5 rounded-xl ${todayIn(d) ? 'bg-slate-100 dark:bg-white/5 ring-1 ring-amber-500/40' : ''}`}
               >
                 <span
                   className={`shrink-0 min-w-9 text-center px-1.5 py-1 rounded-lg text-xs font-bold ${
-                    hasHoliday
-                      ? 'bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-400'
-                      : hasInternational
-                        ? 'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-400'
-                        : 'bg-slate-100 text-slate-500 dark:bg-white/5 dark:text-slate-400'
+                    hasZoro
+                      ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400'
+                      : hasHoliday
+                        ? 'bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-400'
+                        : hasInternational
+                          ? 'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-400'
+                          : 'bg-slate-100 text-slate-500 dark:bg-white/5 dark:text-slate-400'
                   }`}
                 >
                   {toPersianDigits(d.day)}
@@ -230,14 +250,19 @@ export const JalaliCalendar = () => {
                     <p
                       key={idx}
                       className={`text-xs md:text-sm leading-6 ${
-                        item.isHoliday
-                          ? 'text-rose-600 dark:text-rose-400 font-bold'
-                          : item.isInternational
-                            ? 'text-sky-700 dark:text-sky-400'
-                            : 'text-slate-600 dark:text-slate-300'
+                        isZoro(item)
+                          ? 'text-amber-600 dark:text-amber-400'
+                          : item.isHoliday
+                            ? 'text-rose-600 dark:text-rose-400 font-bold'
+                            : item.isInternational
+                              ? 'text-sky-700 dark:text-sky-400'
+                              : 'text-slate-600 dark:text-slate-300'
                       }`}
                     >
                       {item.label}
+                      {item.isZoroastrian && (
+                        <span className="text-slate-400 dark:text-slate-500 font-normal"> (زرتشتی)</span>
+                      )}
                       {item.hijriLabel && (
                         <span className="text-slate-400 dark:text-slate-500 font-normal"> [ {item.hijriLabel} ]</span>
                       )}
