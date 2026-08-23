@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import jalaali from 'jalaali-js';
 import { toPersianDigits } from '@/utils/date';
+import { getHolidayName } from '@/utils/iranianHolidays';
+import { getMonthEvents, type DayEvents } from '@/utils/monthEvents';
 
 const PERSIAN_MONTHS = [
   'فروردین', 'اردیبهشت', 'خرداد',
@@ -61,8 +63,14 @@ export const JalaliCalendar = () => {
   const isToday = (cell: CalendarCell) =>
     cell.jy === todayJalaali.jy && cell.jm === todayJalaali.jm && cell.jd === todayJalaali.jd;
 
+  const events = getMonthEvents(view.jy, view.jm);
+  const todayIn = (d: DayEvents) =>
+    d.day === todayJalaali.jd && view.jm === todayJalaali.jm && view.jy === todayJalaali.jy;
+
   return (
-    <div className="w-full max-w-xl mx-auto bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-white/10 shadow-xl overflow-hidden">
+    <div className="w-full flex flex-col lg:flex-row gap-5 lg:gap-6 items-stretch lg:items-start justify-center">
+      {/* Calendar card */}
+      <div className="w-full max-w-xl shrink-0 mx-auto lg:mx-0 bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-white/10 shadow-xl overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-2.5 border-b border-slate-100 dark:border-white/10">
         <button
@@ -119,23 +127,24 @@ export const JalaliCalendar = () => {
             if (!cell) return <div key={`empty-${i}`} />;
             const friday = i % 7 === FRIDAY_INDEX;
             const today = isToday(cell);
+            const holidayName = getHolidayName(cell.jm, cell.jd);
             return (
               <div
                 key={cell.jd}
-                title={`${cell.jd} ${PERSIAN_MONTHS[cell.jm - 1]} ${cell.jy}`}
+                title={`${cell.jd} ${PERSIAN_MONTHS[cell.jm - 1]} ${cell.jy}${holidayName ? ` - ${holidayName}` : ''}`}
                 className={`h-10 flex flex-col items-center justify-center rounded-lg transition-all ${
                   today
                     ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg shadow-amber-500/30 scale-105'
-                    : friday
+                    : friday || holidayName
                       ? 'bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20'
                       : 'bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10'
                 }`}
               >
                 <span
-                  className={`text-sm md:text-base font-bold leading-tight ${
+                  className={`text-sm font-bold leading-tight ${
                     today
                       ? 'text-white'
-                      : friday
+                      : friday || holidayName
                         ? 'text-rose-500 dark:text-rose-400'
                         : 'text-slate-700 dark:text-slate-200'
                   }`}
@@ -168,6 +177,78 @@ export const JalaliCalendar = () => {
           برو به امروز
         </button>
       </div>
+      </div>
+
+      {/* Occasions panel (like time.ir) */}
+      <aside className="flex-1 min-w-0 w-full bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-white/10 shadow-xl overflow-hidden flex flex-col lg:self-stretch">
+        <div className="px-5 py-3 border-b border-slate-100 dark:border-white/10">
+          <h2 className="text-base md:text-lg font-black text-slate-900 dark:text-white">
+            مناسبت‌های ماه {PERSIAN_MONTHS[view.jm - 1]} {toPersianDigits(view.jy)}
+          </h2>
+          <p className="text-[10px] md:text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
+            تاریخ‌های قمری بر اساس تقویم اوم‌القری تقریبی است
+          </p>
+          <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1.5 text-[10px] md:text-[11px]">
+            <span className="flex items-center gap-1 text-rose-500 dark:text-rose-400">
+              <span className="w-2 h-2 rounded-full bg-rose-500 inline-block" /> تعطیل رسمی
+            </span>
+            <span className="flex items-center gap-1 text-slate-400 dark:text-slate-500">
+              <span className="w-2 h-2 rounded-full bg-slate-400 inline-block" /> مناسبت ملی
+            </span>
+            <span className="flex items-center gap-1 text-sky-600 dark:text-sky-400">
+              <span className="w-2 h-2 rounded-full bg-sky-500 inline-block" /> روز جهانی
+            </span>
+          </div>
+        </div>
+        <ul className="p-3 lg:flex-1 lg:overflow-y-auto">
+          {events.length === 0 && (
+            <li className="text-center text-xs text-slate-400 dark:text-slate-500 py-8">
+              مناسبت ثبت‌شده‌ای در این ماه نیست
+            </li>
+          )}
+          {events.map((d) => {
+            const hasHoliday = d.items.some((i) => i.isHoliday);
+            const hasInternational = !hasHoliday && d.items.some((i) => i.isInternational);
+            return (
+              <li
+                key={d.day}
+                className={`flex items-start gap-3 px-2 py-1.5 rounded-xl ${todayIn(d) ? 'bg-amber-500/10' : ''}`}
+              >
+                <span
+                  className={`shrink-0 min-w-9 text-center px-1.5 py-1 rounded-lg text-xs font-bold ${
+                    hasHoliday
+                      ? 'bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-400'
+                      : hasInternational
+                        ? 'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-400'
+                        : 'bg-slate-100 text-slate-500 dark:bg-white/5 dark:text-slate-400'
+                  }`}
+                >
+                  {toPersianDigits(d.day)}
+                </span>
+                <div className="min-w-0">
+                  {d.items.map((item, idx) => (
+                    <p
+                      key={idx}
+                      className={`text-xs md:text-sm leading-6 ${
+                        item.isHoliday
+                          ? 'text-rose-600 dark:text-rose-400 font-bold'
+                          : item.isInternational
+                            ? 'text-sky-700 dark:text-sky-400'
+                            : 'text-slate-600 dark:text-slate-300'
+                      }`}
+                    >
+                      {item.label}
+                      {item.hijriLabel && (
+                        <span className="text-slate-400 dark:text-slate-500 font-normal"> [ {item.hijriLabel} ]</span>
+                      )}
+                    </p>
+                  ))}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </aside>
     </div>
   );
 };
