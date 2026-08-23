@@ -60,7 +60,7 @@ export const ShareButtons = () => {
                 onClick={handleCopy}
                 whileHover={{ scale: 1.15, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="p-3.5 bg-gray-800 dark:bg-gray-100 text-white dark:text-gray-900 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 relative group flex items-center justify-center"
+                className="p-3.5 bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 relative group flex items-center justify-center"
                 aria-label="Copy Link"
             >
                 <LinkIcon className="w-5 h-5" />
@@ -70,7 +70,7 @@ export const ShareButtons = () => {
                             initial={{ opacity: 0, y: 10, scale: 0.8 }}
                             animate={{ opacity: 1, y: -45, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.8 }}
-                            className="absolute bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold py-1.5 px-3 rounded-lg shadow-xl whitespace-nowrap"
+                            className="absolute bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold py-1.5 px-3 rounded-lg shadow-xl whitespace-nowrap"
                         >
                             کپی شد!
                         </motion.span>

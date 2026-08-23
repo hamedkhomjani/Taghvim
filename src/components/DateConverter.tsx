@@ -69,46 +69,46 @@ export const DateConverter = () => {
   };
 
   return (
-    <section className="py-12 px-4 max-w-4xl mx-auto w-full">
+    <section className="py-2 md:py-6 px-4 max-w-4xl mx-auto w-full">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="relative overflow-hidden bg-white/5 dark:bg-gray-950/40 backdrop-blur-2xl border border-white/10 dark:border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-[0_30px_100px_rgba(0,0,0,0.1)]"
+        className="relative overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] p-5 md:p-8 shadow-xl"
       >
-        <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-amber-500/20 rounded-2xl flex items-center justify-center">
-              <Calendar className="text-amber-500 w-6 h-6" />
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-amber-500/20 rounded-xl flex items-center justify-center">
+              <Calendar className="text-amber-500 w-5 h-5" />
             </div>
-            <h2 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white">تبدیل تاریخ هوشمند</h2>
+            <h2 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white">تبدیل تاریخ هوشمند</h2>
           </div>
           
           <button 
             onClick={toggleMode}
-            className="flex items-center gap-3 px-6 py-3 bg-white/10 hover:bg-white/20 dark:bg-white/5 dark:hover:bg-white/10 rounded-full transition-all border border-white/20 group text-sm font-bold text-gray-800 dark:text-gray-200"
+            className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 rounded-full transition-all border border-slate-200 dark:border-slate-700 group text-xs md:text-sm font-bold text-slate-700 dark:text-slate-200"
           >
             <ArrowLeftRight className="w-4 h-4 text-amber-500 group-hover:rotate-180 transition-transform duration-500" />
             {mode === 'gtoj' ? "میلادی به شمسی" : "شمسی به میلادی"}
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 mb-4 md:mb-6">
             <div>
-                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 pr-2">سال</label>
+                <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-2 pr-2">سال</label>
                 <input 
                     type="number" 
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
-                    className="w-full h-16 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl px-6 text-xl font-bold text-gray-900 dark:text-white focus:border-amber-500 outline-none transition-all"
+                    className="w-full h-12 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 text-lg font-bold text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-all"
                 />
             </div>
             <div>
-                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 pr-2">ماه</label>
+                <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-2 pr-2">ماه</label>
                 <select 
                     value={month}
                     onChange={(e) => setMonth(e.target.value)}
-                    className="w-full h-16 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl px-6 text-lg font-bold text-gray-900 dark:text-white focus:border-amber-500 outline-none transition-all"
+                    className="w-full h-12 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 text-base font-bold text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-all"
                 >
                     {(mode === 'gtoj' ? GregorianMonths : PersianMonths).map((name, i) => (
                         <option key={name} value={i + 1}>{name}</option>
@@ -116,18 +116,18 @@ export const DateConverter = () => {
                 </select>
             </div>
             <div>
-                <label className="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 pr-2">روز</label>
+                <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-2 pr-2">روز</label>
                 <input 
                     type="number" 
                     value={day}
                     onChange={(e) => setDay(e.target.value)}
-                    className="w-full h-16 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl px-6 text-xl font-bold text-gray-900 dark:text-white focus:border-amber-500 outline-none transition-all"
+                    className="w-full h-12 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 text-lg font-bold text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-all"
                 />
             </div>
         </div>
 
         <div className="flex flex-col items-center">
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-white/10 to-transparent mb-10" />
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent mb-6" />
             
             <AnimatePresence mode="wait">
                 <motion.div
@@ -137,8 +137,8 @@ export const DateConverter = () => {
                     exit={{ opacity: 0, scale: 0.95 }}
                     className="text-center"
                 >
-                    <span className="text-sm font-medium text-amber-500 mb-2 block uppercase tracking-widest">خروجی تبدیل شده:</span>
-                    <h3 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white tracking-tight leading-normal drop-shadow-glow">
+                    <span className="text-xs font-medium text-amber-500 mb-1 block uppercase tracking-widest">خروجی تبدیل شده:</span>
+                    <h3 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-normal drop-shadow-glow">
                         {result}
                     </h3>
                 </motion.div>
@@ -158,10 +158,10 @@ export const DateConverter = () => {
                         setDay(j.jd.toString());
                     }
                 }}
-                className="mt-10 p-4 bg-gray-100 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-white/10 rounded-full transition-all group"
+                className="mt-4 md:mt-6 p-3 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 rounded-full transition-all group"
                 title="بازنشانی به امروز"
             >
-                <RefreshCcw className="w-5 h-5 text-gray-400 group-hover:text-amber-500 group-hover:rotate-180 transition-all duration-700" />
+                <RefreshCcw className="w-4 h-4 text-slate-400 group-hover:text-amber-500 group-hover:rotate-180 transition-all duration-700" />
             </button>
         </div>
       </motion.div>

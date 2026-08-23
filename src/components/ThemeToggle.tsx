@@ -4,7 +4,11 @@ import { Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
-export const ThemeToggle = () => {
+interface ThemeToggleProps {
+    variant?: 'hero' | 'page';
+}
+
+export const ThemeToggle = ({ variant = 'hero' }: ThemeToggleProps) => {
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
     const [mounted, setMounted] = useState(false);
 
@@ -35,14 +39,25 @@ export const ThemeToggle = () => {
 
     if (!mounted) {
         return (
-            <button className="p-2 rounded-full bg-white/10 border border-white/20 w-9 h-9" aria-hidden="true" />
+            <button
+                className={`p-2 rounded-full w-9 h-9 ${
+                    variant === 'page'
+                        ? 'bg-slate-100 border border-slate-200 dark:bg-white/5 dark:border-white/10'
+                        : 'bg-white/10 border border-white/20'
+                }`}
+                aria-hidden="true"
+            />
         );
     }
 
     return (
         <button
             onClick={toggleTheme}
-            className="p-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur transition-colors border border-white/20 relative overflow-hidden group"
+            className={`p-2 rounded-full backdrop-blur transition-colors relative overflow-hidden group w-9 h-9 flex items-center justify-center ${
+                variant === 'page'
+                    ? 'bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10'
+                    : 'bg-white/10 hover:bg-white/20 border border-white/20'
+            }`}
             aria-label="Toggle Dark Mode"
         >
             <motion.div
@@ -51,9 +66,9 @@ export const ThemeToggle = () => {
                 transition={{ duration: 0.5, type: "spring" }}
             >
                 {theme === 'dark' ? (
-                    <Moon className="w-5 h-5 text-yellow-300 drop-shadow-glow" />
+                    <Moon className={`w-4 h-4 ${variant === 'page' ? 'text-amber-500' : 'text-yellow-300'} drop-shadow-glow`} />
                 ) : (
-                    <Sun className="w-5 h-5 text-yellow-500 drop-shadow-glow" />
+                    <Sun className={`w-4 h-4 ${variant === 'page' ? 'text-amber-500' : 'text-yellow-500'} drop-shadow-glow`} />
                 )}
             </motion.div>
         </button>

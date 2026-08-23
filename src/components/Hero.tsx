@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { formatPersianDate, formatGregorianDate, toPersianDigits } from '@/utils/date';
 import { useEffect, useState, useRef } from 'react';
 import { useNowruz } from '@/context/NowruzContext';
-import { Calendar } from 'lucide-react';
+import { CalendarDays, Calculator } from 'lucide-react';
 
 export const Hero = () => {
     const { activeYear } = useNowruz();
@@ -79,13 +79,20 @@ export const Hero = () => {
                 <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="flex gap-4 items-center"
+                    className="flex gap-3 md:gap-4 items-center"
                 >
+                    <Link 
+                        href="/calendar"
+                        className="flex items-center gap-1.5 md:gap-2 px-3 md:px-6 py-2 md:py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white text-[12px] md:text-sm font-bold border border-white/20 transition-all group"
+                    >
+                        <CalendarDays className="w-3.5 h-3.5 md:w-4 md:h-4 text-amber-300 group-hover:scale-110 transition-transform" />
+                        <span className="whitespace-nowrap">تقویم</span>
+                    </Link>
                     <Link 
                         href="/converter"
                         className="flex items-center gap-1.5 md:gap-2 px-3 md:px-6 py-2 md:py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white text-[12px] md:text-sm font-bold border border-white/20 transition-all group"
                     >
-                        <Calendar className="w-3.5 h-3.5 md:w-4 md:h-4 text-amber-300 group-hover:scale-110 transition-transform" />
+                        <Calculator className="w-3.5 h-3.5 md:w-4 md:h-4 text-amber-300 group-hover:scale-110 transition-transform" />
                         <span className="whitespace-nowrap">تبدیل تاریخ</span>
                     </Link>
                     <ThemeToggle />
