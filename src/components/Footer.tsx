@@ -27,6 +27,7 @@ export const Footer = () => {
                         <li><Link href="/" className="hover:text-indigo-500 transition-colors">صفحه اصلی</Link></li>
                         <li><Link href="/calendar" className="hover:text-indigo-500 transition-colors">تقویم شمسی</Link></li>
                         <li><Link href="/converter" className="hover:text-indigo-500 transition-colors">مبدل تاریخ</Link></li>
+                        <li><Link href="/age" className="hover:text-indigo-500 transition-colors">محاسبه سن</Link></li>
                     </ul>
                 </div>
                 <div className="flex flex-col items-center md:items-start">

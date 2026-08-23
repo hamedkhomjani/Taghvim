@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { formatPersianDate, formatGregorianDate, toPersianDigits } from '@/utils/date';
 import { useEffect, useState, useRef } from 'react';
 import { useNowruz } from '@/context/NowruzContext';
-import { CalendarDays, Calculator } from 'lucide-react';
+import { CalendarDays, Calculator, Cake } from 'lucide-react';
 
 export const Hero = () => {
     const { activeYear } = useNowruz();
@@ -94,6 +94,13 @@ export const Hero = () => {
                     >
                         <Calculator className="w-3.5 h-3.5 md:w-4 md:h-4 text-amber-300 group-hover:scale-110 transition-transform" />
                         <span className="whitespace-nowrap">تبدیل تاریخ</span>
+                    </Link>
+                    <Link 
+                        href="/age"
+                        className="flex items-center gap-1.5 md:gap-2 px-3 md:px-6 py-2 md:py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white text-[12px] md:text-sm font-bold border border-white/20 transition-all group"
+                    >
+                        <Cake className="w-3.5 h-3.5 md:w-4 md:h-4 text-amber-300 group-hover:scale-110 transition-transform" />
+                        <span className="whitespace-nowrap">محاسبه سن</span>
                     </Link>
                     <ThemeToggle />
                 </motion.div>

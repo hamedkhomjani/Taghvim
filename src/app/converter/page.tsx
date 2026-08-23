@@ -39,9 +39,12 @@ export default function ConverterPage() {
         
         <DateConverter />
 
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link href="/calendar" className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full font-bold text-sm text-slate-600 dark:text-slate-300 hover:text-amber-500 hover:border-amber-500/40 transition-colors shadow-sm">
             تقویم شمسی
+          </Link>
+          <Link href="/age" className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full font-bold text-sm text-slate-600 dark:text-slate-300 hover:text-amber-500 hover:border-amber-500/40 transition-colors shadow-sm">
+            محاسبه سن
           </Link>
         </div>
       </div>
